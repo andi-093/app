@@ -1,17 +1,11 @@
 name: Build APK
-
-on:
-  push:
-    branches:
-      - main
-  workflow_dispatch:
+on: [push]
 
 jobs:
-  build:
+  build-apk:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v3
 
       - name: Setup Python
@@ -25,14 +19,13 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.16.0'
+          flutter-version: '3.19.0'
 
-      - name: Build APK via Flet
-        run: |
-          flet build apk --verbose
+      - name: Build APK
+        run: flet build apk --verbose
 
       - name: Upload APK
         uses: actions/upload-artifact@v3
         with:
-          name: app-release
+          name: mi-app-apk
           path: build/apk/app-release.apk
