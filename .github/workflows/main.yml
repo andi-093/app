@@ -6,15 +6,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4  # <--- Actualizado a v4
 
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5 # <--- Actualizado a v5
         with:
           python-version: '3.11'
 
-      - name: Install Flet
-        run: pip install flet
+      # Crea requirements.txt si no existe
+      - name: Create requirements.txt
+        run: |
+          if [ ! -f requirements.txt ]; then
+            echo "flet" > requirements.txt
+          fi
+
+      - name: Install Dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install flet
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -25,7 +34,7 @@ jobs:
         run: flet build apk --verbose
 
       - name: Upload APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4  # <--- ¡AQUÍ ESTABA EL ERROR! Ahora es v4
         with:
           name: mi-app-apk
           path: build/apk/app-release.apk
