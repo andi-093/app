@@ -6,22 +6,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
-
-      # --- PASO DE DIAGNÓSTICO (NUEVO) ---
-      - name: 🕵️‍♂️ MOSTRAR ARCHIVOS (DEBUG)
-        run: |
-          echo "=== LISTA DE ARCHIVOS EN LA CARPETA ACTUAL ==="
-          ls -la
-          echo "=== BUSCANDO MAIN.PY ==="
-          find . -name "main.py"
-          echo "=============================================="
+        uses: actions/checkout@v4  # <--- Actualizado a v4
 
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v5 # <--- Actualizado a v5
         with:
           python-version: '3.11'
 
+      # Crea requirements.txt si no existe
       - name: Create requirements.txt
         run: |
           if [ ! -f requirements.txt ]; then
@@ -39,12 +31,10 @@ jobs:
           flutter-version: '3.19.0'
 
       - name: Build APK
-        # Intentamos construir, pero si falla, ya habremos visto la lista de archivos arriba
         run: flet build apk --verbose
 
       - name: Upload APK
-        uses: actions/upload-artifact@v4
-        if: success() # Solo sube si el paso anterior funcionó
+        uses: actions/upload-artifact@v4  # <--- ¡AQUÍ ESTABA EL ERROR! Ahora es v4
         with:
           name: mi-app-apk
           path: build/apk/app-release.apk
